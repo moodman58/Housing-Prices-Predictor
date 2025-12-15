@@ -9,7 +9,10 @@ Data Needed:
     Can have other optional data series
 
     Uncertainty/Forecasting Data  
-        Can consider inflation
+        Can consider inflPation
 
 Dataset:
-    date, beds, avg_rent, month number
+    date, beds, avg_rent
+
+Development Process:
+    Build Dataset
