@@ -24,9 +24,8 @@ def main():
     # CLEAN.parent.mkdir(parents=True, exist_ok=True)
     # df.to_csv(CLEAN, index=False)
     
-    training_data, testing_data = createDataset(df=df)
-
-    return training_data, testing_data
+    training_data, testing_data, time_data = createDataset(df=df)
+    return training_data, testing_data, time_data
 
 
 def removeCommas(df : pd.DataFrame) -> pd.DataFrame:
@@ -49,6 +48,8 @@ def cleanDataFrame(df : pd.DataFrame) -> pd.DataFrame:
 def createDataset(df : pd.DataFrame) -> pd.DataFrame:
     """Gets the dataframe to a ready state to apply ML algorithms"""
     
+    df = df.copy()
+
     training_data_set = {}
     testing_data_set = {}
 
@@ -61,17 +62,19 @@ def createDataset(df : pd.DataFrame) -> pd.DataFrame:
     training_data = training_data.sort_values(["Date", "beds"])
 
     # Split training and testing data by bedroom, and convert values to np arrays
-    for column, row in training_data.groupby("beds", sort=False):
-        if column not in training_data_set:
-            training_data_set[column] = []
-        training_data_set[column].append(row["avg_rent"].to_numpy()) 
+    training_data_set = {
+    beds: grp.sort_values("Date")["avg_rent"].to_numpy()
+    for beds, grp in training_data.groupby("beds", sort=False)
+    }
 
-    for column, row in testing_data.groupby("beds", sort=False):
-        if column not in testing_data_set:
-            testing_data_set[column] = []
-        testing_data_set[column].append(row["avg_rent"].to_numpy()) 
+    testing_data_set = {
+    beds: grp.sort_values("Date")["avg_rent"].to_numpy()
+    for beds, grp in testing_data.groupby("beds", sort=False)
+}
+    
+    time_data_set = pd.to_datetime(training_data["Date"]).drop_duplicates()
 
-    return training_data_set, testing_data_set
+    return training_data_set, testing_data_set, time_data_set
 
 
 def convertLong(df : pd.DataFrame) -> pd.DataFrame:
@@ -101,8 +104,8 @@ def splitData(split_index : float, df : pd.DataFrame) -> list[pd.DataFrame, pd.D
     df = df.sort_values(["Date", "beds"]).reset_index(drop=True)
     split_index = int(len(df) * 0.8)
 
-    train = df.iloc[:split_index]
-    test  = df.iloc[split_index:]
+    train = df.iloc[:split_index].copy()
+    test  = df.iloc[split_index:].copy()
 
     return train, test
 
