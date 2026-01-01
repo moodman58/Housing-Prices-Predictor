@@ -22,7 +22,7 @@ Data preparation is handled by the script: [data/create_dataset.py](data/create_
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\activate
 ```
 
 2. Install dependencies (recommended):
