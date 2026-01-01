@@ -1,18 +1,1 @@
-Define Problem:
-    Predict avg monthly rent for condo apartments in toronto
-    Predicting by bedroom (1 bedroom, 2 bedroom, etc)
-    Predicting for 12 months ahead
-    Define uncertainty
 
-Data Needed:
-    Need atleast 1 relibable ground truth data series
-    Can have other optional data series
-
-    Uncertainty/Forecasting Data  
-        Can consider inflPation
-
-Dataset:
-    date, beds, avg_rent
-
-Development Process:
-    Build Dataset
